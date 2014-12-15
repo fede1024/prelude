@@ -131,3 +131,54 @@ by Prelude.")
  (run-at-time 5 nil 'prelude-tip-of-the-day))
 
 ;;; init.el ends here
+
+
+;;; MIO
+
+(auto-save-mode 0)
+
+(setq ispell-dictionary "american")
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs")     ;; tell emacs where to read abbrev
+(setq save-abbrevs t)
+(if (file-exists-p abbrev-file-name)
+    (quietly-read-abbrev-file))
+
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file (concat org-directory "/gtd.org"))
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("n" "note" entry (file (concat org-directory "/gtd.org"))
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("j" "Journal" entry (file+datetree (concat org-directory "/diary.org"))
+               "* %?\n%U\n" :clock-in t :clock-resume t)
+              )))
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+
+(load-theme 'solarized-dark)
+(global-set-key (kbd "<delete>") 'delete-char)
+(global-set-key (kbd "C-j") 'ace-jump-mode)
+(global-set-key [C-mouse-4] 'text-scale-increase)
+(global-set-key [C-mouse-5] 'text-scale-decrease)
+(global-set-key (kbd "C-S-v") 'yank)
+
+(require 'yascroll)
+(global-yascroll-bar-mode)
+(toggle-scroll-bar 0)
+
+(require 'multi-term)
+(setq multi-term-program "/bin/bash")
+
+(defun term-send-esc ()
+  "Send ESC in term mode."
+  (interactive)
+  (term-send-raw-string "\e"))
+
+(add-to-list 'term-bind-key-alist '("C-c C-e" . term-send-escape))
+(add-to-list 'term-bind-key-alist '("C-c C-d" . term-send-oef))
+
+;; MULTIPLE CURSORS
+(require 'multiple-cursors)
+
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
